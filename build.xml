@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!-- build file for CaptureMJPEG library -->
+<!-- Created by: Alessio Caiazza &lt;ac@abisso.org&gt;	-->
+
+<project name="CaptureMJPEG" default="build" basedir=".">
+	<import file="user_pref.xml"/>
+
+	<path id="classpath">
+		<pathelement location="${commons-httpclient}"/>
+		<pathelement location="${commons-logging}"/>
+		<pathelement location="${commons-codec}"/>
+	</path>
+
+	<!-- 
+		Build all Java source files into destdir.	 This is common in Java
+		projects: the compile target is trivial, since it just says to build
+		everything.	 Fancier compiler targets are easy if you want to build
+		just one file at a time.
+	-->
+	<target name="build" depends="init">
+		<javac srcdir="${src}" 
+			destdir="${build}"
+			debug="${compile.debug}">
+			<classpath refid="classpath"/>
+		</javac>
+		<copy todir="${build}">
+			<fileset dir="${src}" excludes="**/*.java"/>
+		</copy>
+	</target>
+
+	<target name="download_deps">
+		<mkdir dir="${libs}"/>
+		<!--<get src="http://www.bouncycastle.org/download/bcprov-jdk15-136.jar" dest="${bcprov}" verbose="on" usetimestamp="on" />
+		<get src="http://prdownloads.sourceforge.net/itext/itext-2.0.4.jar" dest="${itext}" verbose="on" usetimestamp="on" /> -->
+		<!-- commons-httpclient -->
+		<get src="http://mirror.tomato.it/apache/httpcomponents/commons-httpclient/binary/commons-httpclient-3.1.tar.gz" dest="${libs}/commons-httpclient-3.1.tar.gz" verbose="on" usetimestamp="on" />
+		<gunzip src="${libs}/commons-httpclient-3.1.tar.gz" />
+		<untar src="${libs}/commons-httpclient-3.1.tar" dest="${libs}">
+			<patternset>
+				<include name="commons-httpclient-3.1/commons-httpclient-3.1.jar"/>
+			</patternset>
+		</untar>
+		<move file="${libs}/commons-httpclient-3.1/commons-httpclient-3.1.jar" todir="${libs}" />
+		<delete file="${libs}/commons-httpclient-3.1.tar.gz" />
+		<delete file="${libs}/commons-httpclient-3.1.tar" />
+		<delete dir="${libs}/commons-httpclient-3.1" />
+		<!-- commons-logging -->
+		<get src="http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.0.4.tar.gz" dest="${libs}/commons-logging-1.0.4.tar.gz" verbose="on" usetimestamp="on" />
+		<gunzip src="${libs}/commons-logging-1.0.4.tar.gz" />
+		<untar src="${libs}/commons-logging-1.0.4.tar" dest="${libs}">
+			<patternset>
+				<include name="commons-logging-1.0.4/commons-logging.jar"/>
+			</patternset>
+		</untar>
+		<move file="${libs}/commons-logging-1.0.4/commons-logging.jar" todir="${libs}" />
+		<delete file="${libs}/commons-logging-1.0.4.tar.gz" />
+		<delete file="${libs}/commons-logging-1.0.4.tar" />
+		<delete dir="${libs}/commons-logging-1.0.4" />
+		<!-- commons-codec -->
+				<get src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar.gz" dest="${libs}/commons-codec-1.2.tar.gz" verbose="on" usetimestamp="on" />
+		<gunzip src="${libs}/commons-codec-1.2.tar.gz" />
+		<untar src="${libs}/commons-codec-1.2.tar" dest="${libs}">
+			<patternset>
+				<include name="commons-codec-1.2/commons-codec-1.2.jar"/>
+			</patternset>
+		</untar>
+		<move file="${libs}/commons-codec-1.2/commons-codec-1.2.jar" todir="${libs}" />
+		<delete file="${libs}/commons-codec-1.2.tar.gz" />
+		<delete file="${libs}/commons-codec-1.2.tar" />
+		<delete dir="${libs}/commons-codec-1.2" />
+</target>
+	<!--
+		init is a target that sets things up for the build.	 Since we use the
+		built-in ant function mkdir, it will only make the directory if it
+		does not already exist.
+	-->
+	<target name="init">
+		<mkdir dir="${release}"/>
+		<mkdir dir="${build}"/>
+	</target>
+
+
+	<!--
+	<target name="run" depends="build">
+		<java classname="${main.class}"	
+			fork="true" 
+			dir="." 
+			classpath="${build}" 
+			maxmemory="500m">
+			<classpath refid="classpath"/>
+			<arg value="-g"/>
+		</java>
+	</target>
+	-->
+	<!--
+		Always include a clean target to get rid of all the extra files
+		created by the build process, so you can save storage safely, without
+		thinking.	 Also: sometimes you'll want to do a completely fresh build,
+		such as when changing to a new version of the JDK.
+	-->
+	<target name="clean" description="Removes previous build">
+		<delete verbose="true">
+			<fileset dir="${build}"/>
+			<fileset dir="${release}"/>
+		</delete>
+	</target>
+
+
+
+<!--	<target name="jar" depends="build">
+		<jar jarfile="${out.jar}">
+			<fileset dir="${build}"/>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="${main.class}"/>
+				<attribute name="Class-Path" value=". ${itext} ${bcprov} ${commons-cli}"/>
+			</manifest>
+		</jar>
+	</target> -->
+	
+	
+	
+<!--
+  <target name="deploy" depends="build">
+      <fatjar.build output="${out.fatjar}">
+          <fatjar.manifest mainclass="${main.class}"/>
+          <fatjar.filesource path="${build}" relpath="">
+              <fatjar.exclude relpath=".svn/"/>
+          </fatjar.filesource>
+          <fatjar.jarsource file="${itext}" relpath=""/>
+          <fatjar.jarsource file="${commons-cli}" relpath=""/>
+          <fatjar.jarsource file="${bcprov}" relpath=""/>
+          <fatjar.filesource path="./images/Icon.png" relpath="images/Icon.png"/>
+      </fatjar.build>
+  </target>
+-->
+
+
+</project>
+

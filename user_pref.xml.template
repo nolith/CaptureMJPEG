@@ -1,0 +1,12 @@
+<!-- rename to user_pref.xml and customize -->
+<project name="user preferences">
+	<property name="src" value="./src"/>
+	<property name="build" value="./bin"/>
+	<property name="release" value="./release"/>
+	<property name="libs" value="./libs"/>
+	<property name="out.jar" value="./capturemjpeg.jar"/>
+	<property name="commons-httpclient" value="${libs}/commons-httpclient-3.1.jar"/>
+	<property name="commons-logging" value="${libs}/commons-logging.jar"/>
+	<property name="commons-codec" value="${libs}/commons-codec-1.2.jar"/>
+	<property name="compile.debug" value="true"/>
+</project>

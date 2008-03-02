@@ -2,3 +2,6 @@ syntax: glob
 *~
 *.swp
 *.class
+local_hg
+user_pref.xml
+libs/*
