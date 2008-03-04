@@ -3,8 +3,6 @@
  */
 package it.lilik.capturemjpeg;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 
 import org.apache.commons.httpclient.HttpClient;

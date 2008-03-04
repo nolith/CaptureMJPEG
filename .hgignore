@@ -2,6 +2,10 @@ syntax: glob
 *~
 *.swp
 *.class
+.classpath
+.project
 local_hg
 user_pref.xml
 libs/*
+.externalToolBuilders/*
+.settings/*
