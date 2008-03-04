@@ -1,5 +1,5 @@
-/**
- * 
+/*
+ *   
  */
 package it.lilik.capturemjpeg;
 
@@ -11,17 +11,26 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 
 /**
- * @author nolith
+ * This class produces JPEG images in <code>ByteArrayInputStream</code>
+ * getting them from a MJPEG stream.
+ * 
+ * @author Alessio Caiazza 
+ * @author Cosimo Cecchi
  *
  */
 class AsyncProducer implements Runnable {
 
-	
+	/** timeout for HTTP request    */
 	protected static final int HTTP_TIMEOUT = 5000;
+	/** client */
 	protected HttpClient client;
+	/** method */
 	protected HttpMethod method;
+	/** used for stopping this thread */
 	protected boolean shouldStop;
+	/** <code>true</code> if there are pending changes in <code>method</code> */
 	protected boolean isChangePending;
+	/** circular buffer for images */
 	protected ByteArrayInputStream buffer[];
 	
 	
@@ -34,6 +43,7 @@ class AsyncProducer implements Runnable {
 	}
 
 	/**
+	 * It stops this thread when the current image if finished
 	 * @param shouldStop the shouldStop to set
 	 */
 	public void setShouldStop(boolean shouldStop) {
@@ -41,6 +51,9 @@ class AsyncProducer implements Runnable {
 	}
 
 	/**
+	 * It changes the URI.<br>
+	 * A new connection will be performed after a complete
+	 * image reading.
 	 * @param method the method to set
 	 */
 	public void setMethod(HttpMethod method) {
@@ -62,7 +75,11 @@ class AsyncProducer implements Runnable {
 	}
 
 	/**
-	 * @param method
+	 * This constructor provides support for HTTP AUTH
+	 * 
+	 * @param method the MJPEG stream URI
+	 * @param username HTTP AUTH username
+	 * @param password HTTP AUTH password
 	 */
 	public AsyncProducer(HttpMethod method, String username, String password) {
 		this.method = method;
@@ -80,16 +97,17 @@ class AsyncProducer implements Runnable {
 		}
  
 	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 
 	}
 
 	/**
+	 * Dummy main for testing purpose
 	 * @param args
 	 */
 	public static void main(String[] args) {

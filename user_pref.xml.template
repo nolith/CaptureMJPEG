@@ -2,6 +2,7 @@
 <project name="user preferences">
 	<property name="src" value="./src"/>
 	<property name="build" value="./bin"/>
+	<property name="docs" value="./docs"/>
 	<property name="release" value="./release"/>
 	<property name="libs" value="./libs"/>
 	<property name="out.jar" value="./capturemjpeg.jar"/>

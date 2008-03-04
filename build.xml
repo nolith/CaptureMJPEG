@@ -20,7 +20,9 @@
 	<target name="build" depends="init">
 		<javac srcdir="${src}" 
 			destdir="${build}"
-			debug="${compile.debug}">
+			debug="${compile.debug}"
+			source="1.4"
+			target="1.4">
 			<classpath refid="classpath"/>
 		</javac>
 		<copy todir="${build}">
@@ -29,9 +31,7 @@
 	</target>
 
 	<target name="download_deps">
-		<mkdir dir="${libs}"/>
-		<!--<get src="http://www.bouncycastle.org/download/bcprov-jdk15-136.jar" dest="${bcprov}" verbose="on" usetimestamp="on" />
-		<get src="http://prdownloads.sourceforge.net/itext/itext-2.0.4.jar" dest="${itext}" verbose="on" usetimestamp="on" /> -->
+		<mkdir dir="${libs}"/> 
 		<!-- commons-httpclient -->
 		<get src="http://mirror.tomato.it/apache/httpcomponents/commons-httpclient/binary/commons-httpclient-3.1.tar.gz" dest="${libs}/commons-httpclient-3.1.tar.gz" verbose="on" usetimestamp="on" />
 		<gunzip src="${libs}/commons-httpclient-3.1.tar.gz" />
@@ -77,6 +77,8 @@
 	<target name="init">
 		<mkdir dir="${release}"/>
 		<mkdir dir="${build}"/>
+		<mkdir dir="${docs}" />
+		<mkdir dir="${docs}/api" />
 	</target>
 
 
@@ -134,7 +136,23 @@
       </fatjar.build>
   </target>
 -->
-
+	<target name="doc" depends="init" description="generate docs">
+	  <javadoc packagenames="it.lilik.capturemjpeg.*"
+	           sourcepath="${src}"
+	           defaultexcludes="yes"
+	           destdir="${docs}/api"
+	  		   access="private"
+	  		   source="1.4"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="CaptureMJPEG API">
+	  	<classpath refid="classpath"/>
+	    <doctitle><![CDATA[<h1>CaptureMJPEG</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2008 Alessio Caiazza, Cosimo Cecchi All Rights Reserved.</i>]]></bottom>
+	    <link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+	  </javadoc>
+	</target>
 
 </project>
 
