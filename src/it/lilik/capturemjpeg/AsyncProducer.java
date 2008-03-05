@@ -3,6 +3,8 @@
  */
 package it.lilik.capturemjpeg;
 
+import it.lilik.capturemjpeg.utils.CircularBuffer;
+
 import java.io.ByteArrayInputStream;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -31,7 +33,7 @@ class AsyncProducer implements Runnable {
 	/** <code>true</code> if there are pending changes in <code>method</code> */
 	protected boolean isChangePending;
 	/** circular buffer for images */
-	protected ByteArrayInputStream buffer[];
+	protected CircularBuffer buffer;
 	
 	
 	
@@ -85,6 +87,7 @@ class AsyncProducer implements Runnable {
 		this.method = method;
 		this.isChangePending = true;
 		this.shouldStop = false;
+		buffer = new CircularBuffer();
 		// create a singular HttpClient object
 		this.client = new HttpClient();
 
