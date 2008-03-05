@@ -104,6 +104,7 @@ public class CircularBuffer {
 			throw new IndexOutOfBoundsException("Empty buffer");
 		}
 		ByteArrayInputStream res = buffer[this.firstIdx];
+		buffer[this.firstIdx] = null;
 		this.firstIdx++;
 		this.firstIdx %= this.size;
 		if (this.firstIdx == this.lastIdx)
