@@ -9,8 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -22,7 +21,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 public class CaptureToFile {
 
 	private String path;
-	private String url;
 	private AsyncProducer client;
 	
 	/**
@@ -60,7 +58,6 @@ public class CaptureToFile {
 	public CaptureToFile(String path, String url, 
 			String user, String password) {
 		this.path = path;		
-		this.url = url;
 		client  = new AsyncProducer(new GetMethod(url),
 				user, password);
 	}
