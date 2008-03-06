@@ -12,3 +12,4 @@ libs/*
 .settings/*
 docs/api/*
 bin/*
+release/*

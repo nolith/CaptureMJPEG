@@ -58,7 +58,10 @@
 		<delete file="${libs}/commons-logging-1.0.4.tar" />
 		<delete dir="${libs}/commons-logging-1.0.4" />
 		<!-- commons-codec -->
-				<get src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar.gz" dest="${libs}/commons-codec-1.2.tar.gz" verbose="on" usetimestamp="on" />
+		<get 
+src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar.gz" 
+		   dest="${libs}/commons-codec-1.2.tar.gz" 
+		   verbose="on" usetimestamp="on" />
 		<gunzip src="${libs}/commons-codec-1.2.tar.gz" />
 		<untar src="${libs}/commons-codec-1.2.tar" dest="${libs}">
 			<patternset>
@@ -76,7 +79,6 @@
 		does not already exist.
 	-->
 	<target name="init">
-		<mkdir dir="${release}"/>
 		<mkdir dir="${build}"/>
 		<mkdir dir="${docs}" />
 		<mkdir dir="${docs}/api" />
@@ -102,42 +104,52 @@
 		such as when changing to a new version of the JDK.
 	-->
 	<target name="clean" description="Removes previous build">
-		<delete verbose="true">
-			<fileset dir="${build}"/>
-			<fileset dir="${release}"/>
-			<fileset dir="${docs}/api"/>
-		</delete>
+		<delete dir="${build}"/>
+		<delete dir="${release}"/>
+		<delete dir="${docs}/api"/>
 	</target>
 
 
 
-<!--	<target name="jar" depends="build">
-		<jar jarfile="${out.jar}">
-			<fileset dir="${build}"/>
+	<target name="jar" depends="build, deploy-init">
+		<jar jarfile="${release}/capturemjpeg/library/capturemjpeg.jar">
+			<fileset dir="${build}"
+					 excludes="**/*Test.class,**/CaptureToFile.class"/>
 			<manifest>
 				<attribute name="Built-By" value="${user.name}"/>
-				<attribute name="Main-Class" value="${main.class}"/>
-				<attribute name="Class-Path" value=". ${itext} ${bcprov} ${commons-cli}"/>
 			</manifest>
 		</jar>
-	</target> -->
+	</target> 
 	
 	
-	
-<!--
-  <target name="deploy" depends="build">
-      <fatjar.build output="${out.fatjar}">
-          <fatjar.manifest mainclass="${main.class}"/>
-          <fatjar.filesource path="${build}" relpath="">
-              <fatjar.exclude relpath=".svn/"/>
-          </fatjar.filesource>
-          <fatjar.jarsource file="${itext}" relpath=""/>
-          <fatjar.jarsource file="${commons-cli}" relpath=""/>
-          <fatjar.jarsource file="${bcprov}" relpath=""/>
-          <fatjar.filesource path="./images/Icon.png" relpath="images/Icon.png"/>
-      </fatjar.build>
+
+  <target name="deploy-init" depends="">
+	<mkdir dir="${release}"/>
+	<mkdir dir="${release}/capturemjpeg"/>
+	<mkdir dir="${release}/capturemjpeg/library"/>
+	<mkdir dir="${release}/capturemjpeg/licenses"/>
+	<mkdir dir="${release}/capturemjpeg/documentation"/>
   </target>
--->
+
+  <target name="deploy" depends="jar, doc">
+    <!-- copy libs -->
+	<copy todir="${release}/capturemjpeg/library">
+	  <fileset dir="${libs}"/>
+	</copy>
+	<!-- copy licenses -->
+	<copy todir="${release}/capturemjpeg/licenses">
+	  <fileset dir="./licenses"/>
+	</copy>
+	<!-- copy documentation -->
+	<copy todir="${release}/capturemjpeg/documentation">
+	  <fileset dir="${docs}/api"/>
+	</copy>
+	<!-- create zip file -->
+	<zip destfile="${release}/capturemjpeg.zip"
+		 basedir="${release}"
+		 excludes="capturemjpeg.zip"/>
+  </target>
+
 	<target name="doc" depends="init" description="generate docs">
 	  <javadoc packagenames="it.lilik.capturemjpeg.*"
 	           destdir="${docs}/api"
