@@ -96,7 +96,7 @@ public class CircularBuffer {
 	 * Get the first available element.
 	 * 
 	 * @return the first element
-	 * @throws IndexOutOfVoundsExceptions
+	 * @throws IndexOutOfBoundsExceptions
 	 */
 	public synchronized ByteArrayInputStream pop() {
 		if (isEmpty()) {

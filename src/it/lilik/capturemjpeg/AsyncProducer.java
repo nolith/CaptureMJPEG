@@ -26,7 +26,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
  * @author Cosimo Cecchi
  *
  */
-class AsyncProducer implements Runnable {
+class AsyncProducer extends Thread {
 
 	/** timeout for HTTP request    */
 	protected static final int HTTP_TIMEOUT = 5000;
@@ -114,11 +114,11 @@ class AsyncProducer implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		// TODO Auto-generated method stub
+		BufferedInputStream is = null;
+		InputStream responseBody = null;
+		String boundary = "";
+		
 		while (!this.shouldStop) {
-			BufferedInputStream is = null;
-			InputStream responseBody = null;
-			String boundary;
 
 			if (this.isChangePending) {
 				synchronized (this.method) {
@@ -136,110 +136,125 @@ class AsyncProducer implements Runnable {
 					}
 					
 					// automagically guess the boundary
-					Header contentType = this.method.getRequestHeader("content-type");
+					Header contentType = this.method.getResponseHeader("Content-Type");
 					String contentTypeS = contentType.toString();
 					int startIndex = contentTypeS.indexOf("boundary=");
 					int endIndex = contentTypeS.indexOf(';', startIndex);
+					if (endIndex == -1) //boundaty is the last option
+						endIndex = contentTypeS.length();
 					boundary = contentTypeS.substring(startIndex + 9, endIndex);
-				}
-				/* Now flip flop to parse the images. We look for the JPEG magic MIME identifier,
-				 * which is composed by the first two bites set to 0xff and 0xd8. We stop when we find
-				 * another "--$boundary" string.
-				 */
-				
-				try {
-					byte tmp[] = new byte[BYTES_TO_READ];
-					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					char delimiter[] = ("--" + boundary).toCharArray();
-					byte magicMIME[] = {(byte) 0xff,
-					                    (byte) 0xd8};
-					byte partialMatch[] = new byte[delimiter.length];
-					int bytesRead = 0;
-					int last = 0;
-					boolean foundStart = false;
 					
-					/* This first cycle ensures we start parsing the stream on the first
-					 * magic MIME identifier.
-					 */
-					/*while (true) {
-						int data;
-						data = is.read();
-						
-						if ((byte) data == magicMIME[0]) {
-							foundStart = true;
-							is.mark(2);
-							continue;
-						}
-						
-						if (foundStart && ((byte) data) == magicMIME[1]) {
-							is.reset();
-							break;
-						}
-	
-						if (foundStart)
-							foundStart = false;
-					} */
-					/* This cycle splits the stream into several ByteArrayInputStreams containing
-					 * the real image, and pushs them to our internal buffer.
-					 */
-					int startIdx = 0;
-					last = 0;
-					boolean lookinForMagicMIME = true;
-					while ((bytesRead = is.read(tmp)) != -1) {
-						for (int i = 0; i < bytesRead; i++) {
-							if (lookinForMagicMIME) {
-								if (tmp[i] == magicMIME[last]) {
-									partialMatch[last] = tmp[i];
-									last++;
-									
-									if (last == 2) {
-										os.write(partialMatch, 0, 2);
-										last = 0;
-										lookinForMagicMIME = false;
-									}
-								} else {
-									last = 0;
-								}
-							}else { //lookinForBoundary
-								if (tmp[i] == delimiter[last]) {
-									partialMatch[last] = tmp[i];
-									last++;
-									
-									if (last == delimiter.length) {
-										this.buffer.push(new ByteArrayInputStream(os.toByteArray()));
-										lookinForMagicMIME = true;
-										last = 0;
-									}
-								} else if (last > 0) {
-									partialMatch[last++] = tmp[i];
-									os.write(partialMatch, 0 , last);
-									last = 0;
-								} else {
-									os.write(tmp[i]);
-								}
-							}
-							
-						}
+					this.isChangePending = false;
+				}	//end syncronyzed			
+			} //end if(isChangePending)
+			
+			/* Now flip flop to parse the images. We look for the JPEG magic MIME identifier,
+			 * which is composed by the first two bites set to 0xff and 0xd8. We stop when we find
+			 * another "--$boundary" string.
+			 */
+			
+			try {
+				byte tmp[] = new byte[BYTES_TO_READ];
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				char delimiter[] = (boundary).toCharArray();
+				byte magicMIME[] = {(byte) 0xff,
+				                    (byte) 0xd8};
+				byte partialMatch[] = new byte[delimiter.length];
+				int bytesRead = 0;
+				int last = 0;
+				boolean foundStart = false;
+				
+				/* This first cycle ensures we start parsing the stream on the first
+				 * magic MIME identifier.
+				 */
+				/*while (true) {
+					int data;
+					data = is.read();
+					
+					if ((byte) data == magicMIME[0]) {
+						foundStart = true;
+						is.mark(2);
+						continue;
+					}
+					
+					if (foundStart && ((byte) data) == magicMIME[1]) {
+						is.reset();
+						break;
+					}
 
-					} 
-				}catch (IOException e) {
-					// TODO: handle exception
-				}
-				
-				
-				
+					if (foundStart)
+						foundStart = false;
+				} */
+				/* This cycle splits the stream into several ByteArrayInputStreams containing
+				 * the real image, and pushs them to our internal buffer.
+				 */
+				int startIdx = 0;
+				last = 0;
+				boolean lookinForMagicMIME = true;
+				boolean imageComplete;
+				imageComplete = false;
+				while (!imageComplete && (bytesRead = is.read(tmp)) != -1) {
+					for (int i = 0; i < bytesRead; i++) {
+						if (lookinForMagicMIME) {
+							if (tmp[i] == magicMIME[last]) {
+								partialMatch[last] = tmp[i];
+								last++;
+								
+								if (last == 2) {
+									os.write(partialMatch, 0, 2);
+									last = 0;
+									lookinForMagicMIME = false;
+								}
+							} else {
+								last = 0;
+							}
+						}else { //lookinForBoundary
+							if (tmp[i] == delimiter[last]) {
+								partialMatch[last] = tmp[i];
+								last++;
+								
+								if (last == delimiter.length) {
+									this.buffer.push(new ByteArrayInputStream(os.toByteArray()));
+									lookinForMagicMIME = true;
+									last = 0;
+									imageComplete = true;
+									break;
+								}
+							} else if (last > 0) {
+								partialMatch[last++] = tmp[i]; 
+								os.write(partialMatch, 0 , last);
+								last = 0;
+							} else {
+								os.write(tmp[i]);
+							}
+						}
+						
+					}
+
+				} 
+			}catch (IOException e) {
+				// TODO: handle exception
 			}
 		}
 
 	}
 
 	/**
-	 * Dummy main for testing purpose
-	 * @param args
+	 * Return the first image available as {@link java.io.ByteArrayInputStream}.
+	 * @return the first image available
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public ByteArrayInputStream pop() {
+		return this.buffer.pop();
+	}
+	
+	/**
+	 * Return <code>true</code> if there is at least one image available into
+	 * the internal buffer.
+	 * 
+	 * @return the availability status
+	 */
+	public boolean isImageAvailable() {
+		return !this.buffer.isEmpty();
 	}
 
 }

@@ -10,3 +10,4 @@ libs/*
 .externalToolBuilders/*
 .settings/*
 docs/api/*
+bin/*
