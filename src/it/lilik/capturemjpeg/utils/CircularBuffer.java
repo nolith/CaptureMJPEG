@@ -6,7 +6,7 @@ package it.lilik.capturemjpeg.utils;
 import java.io.ByteArrayInputStream;
 
 /**
- * A circular buffer of <code>ByteArrayInputStream</code>
+ * A circular buffer of {@link java.io.ByteArrayInputStream}
  * 
  * @author Alessio Caiazza
  * @author Cosimo Cecchi
@@ -29,7 +29,9 @@ public class CircularBuffer {
 	static final int DEFAULT_SIZE = 5;
 
 	/**
-	 * @param size
+	 * Creates a new <code>CircularBuffer</code> with
+     * the specified size. 
+	 * @param size the size of the buffer.
 	 */
 	public CircularBuffer(int size) {
 		this.size = size;
@@ -40,28 +42,16 @@ public class CircularBuffer {
 	}
 	
 	/**
-	 * 
+	 * Creates a <code>CircularBuffer</code> with
+     *  internel buffer of 
+     * {@link it.lilik.capturemjpeg.utils.CircularBuffer#DEFAULT_SIZE}
 	 */
 	public CircularBuffer() {
 		this(CircularBuffer.DEFAULT_SIZE);
 	}
-
-	/**
-	 * @return the lastIdx
-	 */
-	public synchronized int getLastIdx() {
-		return lastIdx;
-	}
-
-	/**
-	 * @return the firstIdx
-	 */
-	public synchronized int getFirstIdx() {
-		return firstIdx;
-	}	
 	
 	/**
-	 * Add a an element to the <code>CircularBuffer</code>
+	 * Adds a an element to the <code>CircularBuffer</code>
 	 * 
 	 * @param data the new element
 	 */
@@ -79,7 +69,7 @@ public class CircularBuffer {
 	}
 	
 	/**
-	 * It counts elements in buffer 
+	 * Returns the  number of elements into the buffer 
 	 * @return the number of valid elements
 	 */
 	public synchronized int getLength() {
@@ -93,7 +83,7 @@ public class CircularBuffer {
 	
 
 	/**
-	 * Get the first available element.
+	 * Gets the first available element.
 	 * 
 	 * @return the first element
 	 * @throws IndexOutOfBoundsExceptions
@@ -113,13 +103,18 @@ public class CircularBuffer {
 	}
 	
 	/**
-	 * 
-	 * @return the status of the buffer
+	 * Returns the status of the buffer.
+	 * @return <code>true</code> if empty, otherwise <code>false</code>
 	 */
 	public synchronized boolean isEmpty() {
 		return this.empty;
 	}
 
+	/**
+     * Returns the size of the buffer.
+     *
+     * @return the size of the buffer.
+     */ 
 	public int getSize() {
 		return this.size;
 	}
