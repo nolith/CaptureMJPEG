@@ -59,11 +59,7 @@ public class CaptureToFile {
 	
 	public CaptureToFile(String path, String url, 
 			String user, String password) {
-		if (path.lastIndexOf('/') == path.length())
-			this.path = path;
-		else
-			this.path = path + "/";
-		
+		this.path = path;		
 		this.url = url;
 		client  = new AsyncProducer(new GetMethod(url),
 				user, password);
