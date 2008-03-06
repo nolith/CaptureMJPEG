@@ -111,7 +111,7 @@ class AsyncProducer extends Thread {
 	}
 	
 	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
+	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
 		BufferedInputStream is = null;
@@ -140,9 +140,19 @@ class AsyncProducer extends Thread {
 					String contentTypeS = contentType.toString();
 					int startIndex = contentTypeS.indexOf("boundary=");
 					int endIndex = contentTypeS.indexOf(';', startIndex);
-					if (endIndex == -1) //boundaty is the last option
-						endIndex = contentTypeS.length();
+					if (endIndex == -1) {//boundary is the last option
+						/* some servers, like mjpg-stremer puts
+						 * a '\r' character at the end of each line.
+						 */
+						if((endIndex = contentTypeS.indexOf('\r',
+								startIndex)) == -1)  
+							endIndex = contentTypeS.length();
+					}
 					boundary = contentTypeS.substring(startIndex + 9, endIndex);
+					//some cameras put -- on boundary, some not
+					if (boundary.charAt(0) != '-' && 
+							boundary.charAt(1) != '-')
+						boundary = "--" + boundary;
 					
 					this.isChangePending = false;
 				}	//end syncronyzed			
@@ -162,33 +172,10 @@ class AsyncProducer extends Thread {
 				byte partialMatch[] = new byte[delimiter.length];
 				int bytesRead = 0;
 				int last = 0;
-				boolean foundStart = false;
 				
-				/* This first cycle ensures we start parsing the stream on the first
-				 * magic MIME identifier.
-				 */
-				/*while (true) {
-					int data;
-					data = is.read();
-					
-					if ((byte) data == magicMIME[0]) {
-						foundStart = true;
-						is.mark(2);
-						continue;
-					}
-					
-					if (foundStart && ((byte) data) == magicMIME[1]) {
-						is.reset();
-						break;
-					}
-
-					if (foundStart)
-						foundStart = false;
-				} */
 				/* This cycle splits the stream into several ByteArrayInputStreams containing
-				 * the real image, and pushs them to our internal buffer.
+				 * the real image, and pushes them to our internal buffer.
 				 */
-				int startIdx = 0;
 				last = 0;
 				boolean lookinForMagicMIME = true;
 				boolean imageComplete;
