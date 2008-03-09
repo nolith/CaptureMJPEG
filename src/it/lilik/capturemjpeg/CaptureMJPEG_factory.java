@@ -26,6 +26,7 @@ public class CaptureMJPEG_factory implements Runnable {
 	private Method captureEventMethod;
 	private Thread runner;
 	private boolean shouldStop;
+	private PImage lastImage;
 	
 	
 	
@@ -37,7 +38,7 @@ public class CaptureMJPEG_factory implements Runnable {
 								String url,
 								String user,
 								String password) {
-		
+		lastImage = null;
 		shouldStop = false;
 		this.parent = parent;
 		client = new AsyncProducer(new GetMethod(url), user, password);
@@ -54,6 +55,7 @@ public class CaptureMJPEG_factory implements Runnable {
 	    }
 	    
 		runner = new Thread(this);
+		runner.setName("CaptureMJPEG_factory");
 	}
 
 	
@@ -68,6 +70,27 @@ public class CaptureMJPEG_factory implements Runnable {
 		shouldStop = true;
 	}
 	
+	public boolean isImageAvailable() {
+		return client.isImageAvailable();
+	}
+	
+	/**
+	 * Provide the last <code>PImage</code> available.
+	 * @return the last <code>PImage</code> or <code>null</code> if no image are available
+	 */
+	public PImage getImage() {
+		if (!isImageAvailable()) {
+			System.out.println("Nulla ciccio!");
+			return lastImage;
+		}
+		try {
+			return lastImage = new PImage((BufferedImage)ImageIO
+					.read(client.pop()));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return lastImage;
+		}
+	}
 	/**
 	 * Callback for processing
 	 */
