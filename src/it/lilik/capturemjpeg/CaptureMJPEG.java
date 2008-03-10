@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.InlineView;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -29,9 +28,39 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 /**
- * This class produces JPEG images in <code>ByteArrayInputStream</code>
- * getting them from a MJPEG stream.
- * 
+ * This class produces JPEG images from Motion JPEG stream.<br/>
+ * It registers a callback function called <code>captureMJPEGEvent</code><br/>
+ * <br/>
+ * <b>Example</b><br/>
+ * <pre>
+import it.lilik.capturemjpeg.*;
+
+private CaptureMJPEG capture;
+private PImage next_img = null;
+
+void setup() {
+  size(400, 300);
+  background(0);
+  capture = new CaptureMJPEG(this,
+			"http://mynetworkcamera/image?speed=20",
+			"admin",
+			"password");
+  capture.startCapture();
+  frameRate(20);
+}
+	
+void draw() {
+  if (next_img != null) {
+    image(next_img, 0, 0);
+  }
+}
+	
+void captureMJPEGEvent(PImage img) {
+  next_img = img;
+}
+</pre>
+ *
+ *
  * @author Alessio Caiazza 
  * @author Cosimo Cecchi
  *
@@ -64,6 +93,9 @@ public class CaptureMJPEG extends Thread {
 		return shouldStop;
 	}
 
+	public void startCapture() {
+		this.start();
+	}
 	/**
 	 * It stops this thread when the current image if finished
 	 * 
@@ -76,8 +108,8 @@ public class CaptureMJPEG extends Thread {
 	 * It changes the URI.<br>
 	 * A new connection will be performed after a complete
 	 * image reading.
-	 * @param method the method to set
-	 * @throws URIException 
+	 * @param url the url of the MJPEG stream
+	 * 
 	 */
 	public void setURL(String url) {
 		synchronized (this.method) {
@@ -101,7 +133,7 @@ public class CaptureMJPEG extends Thread {
 	}
 
 	/**
-	 * @param method
+	 * 
 	 */
 	public CaptureMJPEG(PApplet parent, String url) {
 		this(parent, url, null, null);
@@ -203,9 +235,8 @@ public class CaptureMJPEG extends Thread {
 			 * another "--$boundary" string.
 			 */
 			byte[] img;
-			MJPEGInputStream mis = new MJPEGInputStream(is, boundary);
+			MJPEGInputStream mis = new MJPEGInputStream(is, boundary, method);
 			try {
-				//operation subjected to synchronize
 				img = mis.readImage();
 				if (captureEventMethod != null) {
 					synchronized (lastImage) {
@@ -241,6 +272,9 @@ public class CaptureMJPEG extends Thread {
 
 	}
 
+	/**
+	 * Callback method. It's invoked by processing on stop.
+	 */
 	public void dispose() {
 		this.stopCapture();
 	}

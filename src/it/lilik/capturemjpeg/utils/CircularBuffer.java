@@ -59,7 +59,7 @@ public class CircularBuffer {
 		buffer[this.lastIdx] = data;
 		if( this.lastIdx == this.firstIdx && !this.empty) {
 			//we have overwritten an element
-			System.out.print("overwrite ");
+			//System.out.print("overwrite ");
 			this.firstIdx++;
 			this.firstIdx %= this.size;
 		} 
@@ -67,7 +67,7 @@ public class CircularBuffer {
 			this.empty = false;
 		this.lastIdx++;
 		this.lastIdx %= this.size; 
-		System.out.println("Pushed (" + getLength() + ")");
+		//System.out.println("Pushed (" + getLength() + ")");
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class CircularBuffer {
 		this.firstIdx %= this.size;
 		if (this.firstIdx == this.lastIdx)
 			this.empty = true;
-		System.out.println("Popped (" + getLength() + ")");
+		//System.out.println("Popped (" + getLength() + ")");
 		return res;
 	}
 	
