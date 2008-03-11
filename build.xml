@@ -22,9 +22,10 @@
 		<javac srcdir="${src}" 
 			destdir="${build}"
 			debug="${compile.debug}"
+			excludes="it/lilik/capturemjpeg/**/*Test.java,it/lilik/capturemjpeg/*Test.java" 
 			source="1.4"
 			target="1.4">
-			<classpath refid="classpath"/>
+			<classpath refid="classpath"/>  
 		</javac>
 		<copy todir="${build}">
 			<fileset dir="${src}" excludes="**/*.java"/>
