@@ -29,7 +29,8 @@ import processing.core.PImage;
 
 /**
  * This class produces JPEG images from Motion JPEG stream.<br/>
- * It registers a callback function called <code>captureMJPEGEvent</code><br/>
+ * It searchs for a callback function called <code>void captureMJPEGEvent(PImage img)</code>
+ * into the parent <code>PApplet</code><br/>
  * <br/>
  * <b>Example</b><br/>
  * <pre>
@@ -80,24 +81,34 @@ public class CaptureMJPEG extends Thread {
 	/** circular buffer for images */
 	protected CircularBuffer buffer;
 	
+	/** the parent <code>PApplet</code> **/
 	private PApplet parent;
+	/** callback method **/
 	private Method captureEventMethod;
+	/** Last processed image **/
 	private PImage lastImage;
 	
 	
 	
 	/**
-	 * @return the shouldStop
+	 * Checks if the running thread is in stopping state.
+	 * If <code>true</code> the thread is stopped or it will
+	 * stop after the next image was captured. 
+	 * 
+	 * @return the internal status
 	 */
 	public boolean isStopping() {
 		return shouldStop;
 	}
 
+	/**
+	 * Starts the capture cycle.
+	 */
 	public void startCapture() {
 		this.start();
 	}
 	/**
-	 * It stops this thread when the current image if finished
+	 * Stops this thread when the current image if finished
 	 * 
 	 */
 	public void stopCapture() {
@@ -105,7 +116,7 @@ public class CaptureMJPEG extends Thread {
 	}
 
 	/**
-	 * It changes the URI.<br>
+	 * Changes the URI.<br>
 	 * A new connection will be performed after a complete
 	 * image reading.
 	 * @param url the url of the MJPEG stream
@@ -126,6 +137,12 @@ public class CaptureMJPEG extends Thread {
 		}
 	}
 	
+	/**
+	 * Sets username and password for HTTP Auth.
+	 * 
+	 * @param username the username
+	 * @param password the password
+	 */
 	private void setCredential(String username, String password) {
 		UsernamePasswordCredentials creds = 
 			new UsernamePasswordCredentials(username, password);
@@ -133,16 +150,16 @@ public class CaptureMJPEG extends Thread {
 	}
 
 	/**
-	 * 
+	 * Creates a <code>CaptureMJPEG</code> without HTTP Auth credential
 	 */
 	public CaptureMJPEG(PApplet parent, String url) {
 		this(parent, url, null, null);
 	}
 	
 	/**
-	 * This constructor provides support for HTTP AUTH
+	 * Creates a <code>CaptureMJPEG</code> with HTTP Auth credential
 	 * 
-	 * @param parent the <code>PApplet</code> which use this object
+	 * @param parent the <code>PApplet</code> which uses this object
 	 * @param url the MJPEG stream URI
 	 * @param username HTTP AUTH username
 	 * @param password HTTP AUTH password
@@ -235,9 +252,11 @@ public class CaptureMJPEG extends Thread {
 			 * another "--$boundary" string.
 			 */
 			byte[] img;
-			MJPEGInputStream mis = new MJPEGInputStream(is, boundary, method);
+			MJPEGInputStream mis = new MJPEGInputStream(is, boundary);
 			try {
-				img = mis.readImage();
+				synchronized (method) {
+					img = mis.readImage();
+				}
 				if (captureEventMethod != null) {
 					synchronized (lastImage) {
 			            try {
@@ -279,6 +298,12 @@ public class CaptureMJPEG extends Thread {
 		this.stopCapture();
 	}
 	
+	/**
+	 * Provides the oldest image not yet provided.
+	 * If there's no such image, provides the last provided.
+	 * 
+	 * @return a <code>PImage</code>
+	 */
 	public PImage getImage() {
 		synchronized (lastImage) {
 			if (!isImageAvailable())
@@ -311,6 +336,11 @@ public class CaptureMJPEG extends Thread {
 		return !this.buffer.isEmpty();
 	}
 	
+	/**
+	 * Assigns <code>tmp</tmp> to <code>lastImage</code> without creating a new <code>PImage</code> 
+	 * @param tmp the new <code>PImage</code>
+	 * @return a reference to <code>lastImage</code>
+	 */
 	private PImage assign(PImage tmp) {
 		if( lastImage.height != tmp.height || lastImage.width != tmp.width)
 			lastImage.init(tmp.width, tmp.height, PImage.RGB);

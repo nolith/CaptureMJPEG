@@ -27,9 +27,9 @@
 			target="1.4">
 			<classpath refid="classpath"/>  
 		</javac>
-		<copy todir="${build}">
+		<!-- <copy todir="${build}">
 			<fileset dir="${src}" excludes="**/*.java"/>
-		</copy>
+		</copy> -->
 	</target>
 
 	<target name="download_deps">
