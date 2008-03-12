@@ -3,8 +3,6 @@
  */
 package it.lilik.capturemjpeg;
 
-import it.lilik.capturemjpeg.utils.CircularBuffer;
-
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

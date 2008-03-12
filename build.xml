@@ -104,10 +104,9 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 		thinking.	 Also: sometimes you'll want to do a completely fresh build,
 		such as when changing to a new version of the JDK.
 	-->
-	<target name="clean" description="Removes previous build">
+	<target name="clean" depends="clean-doc" description="Removes previous build">
 		<delete dir="${build}"/>
 		<delete dir="${release}"/>
-		<delete dir="${docs}/api"/>
 	</target>
 
 
@@ -151,7 +150,7 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 		 excludes="capturemjpeg.zip"/>
   </target>
 
-	<target name="doc" depends="init" description="generate docs">
+	<target name="doc" depends="init,clean-doc" description="generate docs">
 	  <javadoc packagenames="it.lilik.capturemjpeg.*"
 	           destdir="${docs}/api"
 	  		   access="package"
@@ -175,5 +174,8 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  </javadoc>
 	</target>
 
+	<target name="clean-doc">
+		<delete dir="${docs}/api"/>
+	</target>
 </project>
 
