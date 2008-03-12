@@ -170,7 +170,7 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	    <bottom><![CDATA[<i>Copyright &#169; 2008 Alessio Caiazza, Cosimo Cecchi All Rights Reserved.</i>]]></bottom>
 	    <link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 	  	<link href="http://hc.apache.org/httpclient-3.x/apidocs/"/>
-		<link href="http://dev.processing.org/reference/core/"/>
+		<link href="http://dev.processing.org/reference/core/javadoc/"/>
 	  </javadoc>
 	</target>
 

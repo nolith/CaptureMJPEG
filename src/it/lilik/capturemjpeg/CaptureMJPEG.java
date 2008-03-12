@@ -42,8 +42,8 @@ import processing.core.PImage;
 
 /**
  * This class produces JPEG images from Motion JPEG stream.<br/>
- * It searchs for a callback function called <code>void captureMJPEGEvent(PImage img)</code>
- * into the parent <code>PApplet</code><br/>
+ * It searches for a callback function called <code>void captureMJPEGEvent(PImage img)</code>
+ * into the parent {@link processing.core.PApplet}<br/>
  * <br/>
  * <b>Example</b><br/>
  * <pre>
@@ -82,17 +82,17 @@ void captureMJPEGEvent(PImage img) {
 public class CaptureMJPEG extends Thread {
 
 	/** timeout for HTTP request    */
-	protected static final int HTTP_TIMEOUT = 5000;
+	private static final int HTTP_TIMEOUT = 5000;
 	/** client */
-	protected HttpClient client;
+	private HttpClient client;
 	/** method */
-	protected HttpMethod method;
+	private HttpMethod method;
 	/** used for stopping this thread */
-	protected boolean shouldStop;
+	private boolean shouldStop;
 	/** <code>true</code> if there are pending changes in <code>method</code> */
-	protected boolean isChangePending;
+	private boolean isChangePending;
 	/** circular buffer for images */
-	protected CircularBuffer buffer;
+	private CircularBuffer buffer;
 	
 	/** the parent <code>PApplet</code> **/
 	private PApplet parent;
