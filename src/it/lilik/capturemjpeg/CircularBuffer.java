@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.lilik.capturemjpeg.utils;
+package it.lilik.capturemjpeg;
 
 import java.io.ByteArrayInputStream;
 
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
  * @author Cosimo Cecchi
  *
  */
-public class CircularBuffer {
+class CircularBuffer {
 	
 	/** data storage */
 	private ByteArrayInputStream buffer[];
@@ -44,7 +44,7 @@ public class CircularBuffer {
 	/**
 	 * Creates a <code>CircularBuffer</code> with
      *  internel buffer of 
-     * {@link it.lilik.capturemjpeg.utils.CircularBuffer#DEFAULT_SIZE}
+     * {@link it.lilik.capturemjpeg.CircularBuffer#DEFAULT_SIZE}
 	 */
 	public CircularBuffer() {
 		this(CircularBuffer.DEFAULT_SIZE);
@@ -59,6 +59,7 @@ public class CircularBuffer {
 		buffer[this.lastIdx] = data;
 		if( this.lastIdx == this.firstIdx && !this.empty) {
 			//we have overwritten an element
+			//System.out.print("overwrite ");
 			this.firstIdx++;
 			this.firstIdx %= this.size;
 		} 
@@ -66,6 +67,7 @@ public class CircularBuffer {
 			this.empty = false;
 		this.lastIdx++;
 		this.lastIdx %= this.size; 
+		//System.out.println("Pushed (" + getLength() + ")");
 	}
 	
 	/**
@@ -99,6 +101,7 @@ public class CircularBuffer {
 		this.firstIdx %= this.size;
 		if (this.firstIdx == this.lastIdx)
 			this.empty = true;
+		//System.out.println("Popped (" + getLength() + ")");
 		return res;
 	}
 	
