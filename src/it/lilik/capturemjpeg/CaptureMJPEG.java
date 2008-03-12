@@ -332,14 +332,6 @@ public class CaptureMJPEG extends Thread {
 	}
 	
 	/**
-	 * Return the first image available as {@link java.io.ByteArrayInputStream}.
-	 * @return the first image available
-	 */
-	public ByteArrayInputStream pop() {
-		return this.buffer.pop();
-	}
-	
-	/**
 	 * Return <code>true</code> if there is at least one image available into
 	 * the internal buffer.
 	 * 
