@@ -101,6 +101,10 @@ public class CaptureMJPEG extends Thread {
 	/** Last processed image **/
 	private PImage lastImage;
 	
+	/** adaptive PApplet size **/
+	private boolean adaptFrameSize;
+	
+	private boolean changeFrameSize;
 	
 	
 	/**
@@ -183,6 +187,8 @@ public class CaptureMJPEG extends Thread {
 		this.lastImage.init(parent.width, parent.height, PImage.RGB);
 		this.method = new GetMethod(url);
 		this.shouldStop = false;
+		this.adaptFrameSize = false;
+		this.changeFrameSize = false;
 		buffer = new CircularBuffer();
 		// create a singular HttpClient object
 		this.client = new HttpClient();
@@ -212,6 +218,27 @@ public class CaptureMJPEG extends Thread {
 	    }
 	}
 	
+	
+	
+	/**
+	 * Sets the adaptive frame size behaviour.
+	 * @see it.lilik.capturemjpeg.CaptureMJPEG#setAdaptFrameSize
+	 * @return the adaptFrameSize
+	 */
+	public boolean isAdaptFrameSize() {
+		return adaptFrameSize;
+	}
+
+	/**
+	 * If <code>true</code> when a stream is initialized
+	 * the <code>parent</code> size is set to the image size.
+	 * 
+	 * @param adaptFrameSize the adaptFrameSize to set
+	 */
+	public void setAdaptFrameSize(boolean adaptFrameSize) {
+		this.adaptFrameSize = adaptFrameSize;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Thread#run()
 	 */
@@ -257,6 +284,8 @@ public class CaptureMJPEG extends Thread {
 						boundary = "--" + boundary;
 					
 					this.isChangePending = false;
+					if(this.adaptFrameSize)
+						this.changeFrameSize = true;
 				}	//end synchronized			
 			} //end if(isChangePending)
 			
@@ -351,6 +380,11 @@ public class CaptureMJPEG extends Thread {
 			lastImage.init(tmp.width, tmp.height, PImage.RGB);
 		lastImage.copy(tmp, 0, 0, tmp.width, tmp.height,
 				0, 0, lastImage.width, lastImage.height);
+		if(this.changeFrameSize) {
+			this.changeFrameSize = false;
+			this.parent.frame.setSize(lastImage.width,
+					lastImage.height);
+		}
 		return lastImage;
 	}
 
