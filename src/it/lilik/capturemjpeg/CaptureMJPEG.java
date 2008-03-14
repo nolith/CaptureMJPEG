@@ -221,7 +221,7 @@ public class CaptureMJPEG extends Thread {
 	
 	
 	/**
-	 * Sets the adaptive frame size behaviour.
+	 * Sets the adaptive frame size behavior.
 	 * @see it.lilik.capturemjpeg.CaptureMJPEG#setAdaptFrameSize
 	 * @return the adaptFrameSize
 	 */
