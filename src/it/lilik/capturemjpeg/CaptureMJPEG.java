@@ -160,7 +160,7 @@ public class CaptureMJPEG extends Thread {
 	 * @param username the username
 	 * @param password the password
 	 */
-	private void setCredential(String username, String password) {
+	public void setCredential(String username, String password) {
 		UsernamePasswordCredentials creds = 
 			new UsernamePasswordCredentials(username, password);
 		client.getState().setCredentials(AuthScope.ANY, creds);
