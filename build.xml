@@ -154,7 +154,6 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  <javadoc packagenames="it.lilik.capturemjpeg.*"
 	           destdir="${docs}/api"
 	  		   access="package"
-	  		   source="1.5"
 	           author="true"
 	           version="true"
 	           use="true"

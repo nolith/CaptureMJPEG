@@ -29,7 +29,6 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
@@ -255,13 +254,27 @@ public class CaptureMJPEG extends Thread {
 					try {
 						this.client.executeMethod(this.method);
 						responseBody = this.method.getResponseBodyAsStream();
+						if (this.method.getStatusCode() == 404) {
+							ErrorImage error = new ErrorImage ("Unable to find '" +
+									this.method.getPath() + "' on host '" +
+									this.method.getURI().getHost() + "'");
+							setErrorImage (error);
+							continue;
+						}
 						is = new BufferedInputStream (responseBody);
-					} catch (HttpException e) {
-						System.err.println("Http error connecting to '" + this.method.getPath() + "'");
-						System.err.println(e.getMessage());
+					} catch (Exception e) {
+						ErrorImage error;
+						try {
+							error = new ErrorImage ("Unable to connect to '" +
+									this.method.getURI().getHost() + "' (" +
+									e.getLocalizedMessage() + ")");
+							setErrorImage (error);
+						} catch (URIException e1) {
+							e1.printStackTrace();
+						}
+
+						
 						continue;
-					} catch (IOException e) {
-						System.err.println("Unable to connect to '" + this.method.getPath() + "'");
 					}
 					
 					// automagically guess the boundary
@@ -299,27 +312,29 @@ public class CaptureMJPEG extends Thread {
 				synchronized (method) {
 					img = mis.readImage();
 				}
-				if (captureEventMethod != null) {
-					synchronized (lastImage) {
-			            try {
-			            	PImage tmp = null;
-			            	tmp = new PImage((BufferedImage)ImageIO.read(
-					            			new ByteArrayInputStream(img)));
-			            	captureEventMethod.invoke(parent, new Object[] { 
-			            		  this.assign(tmp) });
-			            } catch (Exception e) {
-			              System.err.println("Disabling captureEvent() for " + 
-			            		  			 parent.getName() +
-			                                 " because of an error.");
-			              e.printStackTrace();
-			              captureEventMethod = null;
-			            }
-					}
-		        }else {
-		        	this.buffer.push(new ByteArrayInputStream(img));
-		        }
-			}catch (IOException e) {
-				e.printStackTrace();
+				synchronized (lastImage) {
+					if (captureEventMethod != null) {
+				            try {
+				            	PImage tmp = null;
+				            	tmp = new PImage((BufferedImage)ImageIO.read(
+						            			new ByteArrayInputStream(img)));
+				            	captureEventMethod.invoke(parent, new Object[] { 
+				            		  this.assign(tmp) });
+				            } catch (Exception e) {
+				              System.err.println("Disabling captureEvent() for " + 
+				            		  			 parent.getName() +
+				                                 " because of an error.");
+				              e.printStackTrace();
+				              captureEventMethod = null;
+				            }
+					} else {
+			        	this.buffer.push(new ByteArrayInputStream(img));
+			        }
+				}
+			} catch (IOException e) {
+				ErrorImage error = new ErrorImage (e.getLocalizedMessage());
+
+				setErrorImage(error);
 			}
 		}
 		
@@ -331,6 +346,24 @@ public class CaptureMJPEG extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void setErrorImage(ErrorImage error) {
+		if (captureEventMethod != null) {
+			try {
+				PImage pi = new PImage (error);
+		    	captureEventMethod.invoke(parent, new Object[] { 
+		        		  this.assign(pi) });
+			} catch (Exception exc) {
+		          System.err.println("Disabling captureEvent() for " + 
+				  			 parent.getName() +
+		                     " because of an error.");
+		          exc.printStackTrace();
+		          captureEventMethod = null;
+			}
+		} else {
+			this.buffer.push (error.getAsInputStream());
+		}
 	}
 
 	/**
