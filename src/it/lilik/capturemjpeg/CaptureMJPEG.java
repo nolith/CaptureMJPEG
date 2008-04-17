@@ -43,7 +43,8 @@ import processing.core.PImage;
  * This class produces JPEG images from Motion JPEG stream.<br/>
  * It searches for a callback function called <code>void captureMJPEGEvent(PImage img)</code>
  * into the parent {@link processing.core.PApplet}<br/>
- * <br/>
+ * <p>
+ * 
  * <b>Example</b><br/>
  * <pre>
 import it.lilik.capturemjpeg.*;
@@ -140,12 +141,10 @@ public class CaptureMJPEG extends Thread {
 	 */
 	public void setURL(String url) {
 		synchronized (this.method) {
-			//this.method.setPath(url);
 			this.method.releaseConnection();
 			try {
 				this.method.setURI(new URI(url, false));
 			} catch (URIException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			this.isChangePending = true;
@@ -213,7 +212,7 @@ public class CaptureMJPEG extends Thread {
 	          parent.getClass().getMethod("captureMJPEGEvent",
 	                            new Class[] { PImage.class });
 	    } catch (Exception e) {
-	        // no such method, or an error.. which is fine, just ignore
+	        // no such method, or an error...which is fine, just ignore.
 	    }
 	}
 	
@@ -283,7 +282,7 @@ public class CaptureMJPEG extends Thread {
 					int startIndex = contentTypeS.indexOf("boundary=");
 					int endIndex = contentTypeS.indexOf(';', startIndex);
 					if (endIndex == -1) {//boundary is the last option
-						/* some servers, like mjpg-stremer puts
+						/* some servers, like mjpeg-streamer puts
 						 * a '\r' character at the end of each line.
 						 */
 						if((endIndex = contentTypeS.indexOf('\r',
@@ -301,11 +300,7 @@ public class CaptureMJPEG extends Thread {
 						this.changeFrameSize = true;
 				}	//end synchronized			
 			} //end if(isChangePending)
-			
-			/* Now flip flop to parse the images. We look for the JPEG magic MIME identifier,
-			 * which is composed by the first two bites set to 0xff and 0xd8. We stop when we find
-			 * another "--$boundary" string.
-			 */
+
 			byte[] img;
 			MJPEGInputStream mis = new MJPEGInputStream(is, boundary);
 			try {
@@ -342,7 +337,6 @@ public class CaptureMJPEG extends Thread {
 		try {
 			is.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -29,7 +29,7 @@ import javax.imageio.ImageIO;
 
 /**
  * This class builds a {@link java.awt.image.BufferedImage} from an error string.
- * The image built this way will be black with the error in red painted over it.
+ * The image built this way will be black with the error in white painted over it.
  * 
  * @author Alessio Caiazza
  * @author Cosimo Cecchi
@@ -45,15 +45,19 @@ class ErrorImage extends BufferedImage {
 	 */
 
 	public ErrorImage (String err) {
+		//creates the BufferedImage
 		super (300, 300, BufferedImage.TYPE_INT_RGB);
+		//get the drawing area
 		Graphics2D graph = this.createGraphics();
 		
+		//split the error string on spaces.
 		String splitted[] = err.split("\\s");
 		
-		graph.setColor (Color.red);
+		graph.setColor (Color.white);
 		
 		int line = 1;
 		for (int i = 0; i < splitted.length; i++) {
+			//we reassemble the string with no more than 45 chars/line
 			StringBuffer str = new StringBuffer(splitted[i]);
 			while((i+1 < splitted.length) &&
 					(str.length() + splitted[i+1].length()) < 45 ) {
