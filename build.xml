@@ -23,8 +23,8 @@
 			destdir="${build}"
 			debug="${compile.debug}"
 			excludes="it/lilik/capturemjpeg/**/*Test.java,it/lilik/capturemjpeg/*Test.java" 
-			source="1.4"
-			target="1.4">
+			source="1.5"
+			target="1.5">
 			<classpath refid="classpath"/>  
 		</javac>
 		<!-- <copy todir="${build}">
@@ -154,7 +154,7 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  <javadoc packagenames="it.lilik.capturemjpeg.*"
 	           destdir="${docs}/api"
 	  		   access="package"
-	  		   source="1.4"
+	  		   source="1.5"
 	           author="true"
 	           version="true"
 	           use="true"
@@ -168,7 +168,7 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  	</fileset>
 	    <doctitle><![CDATA[<h1>CaptureMJPEG</h1>]]></doctitle>
 	    <bottom><![CDATA[<i>Copyright &#169; 2008 Alessio Caiazza, Cosimo Cecchi All Rights Reserved.</i>]]></bottom>
-	    <link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+	    <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
 	  	<link href="http://hc.apache.org/httpclient-3.x/apidocs/"/>
 		<link href="http://dev.processing.org/reference/core/javadoc/"/>
 	  </javadoc>
