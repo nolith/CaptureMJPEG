@@ -34,7 +34,7 @@ public class SonyURL {
 	private Integer speed;
 	
 	/**
-	 * Creates a <code>SonyBuilder</code> for the specified <code>host</code><br/>
+	 * Creates a <code>SonyURL</code> for the specified <code>host</code><br/>
 	 * 
 	 * <code>host</code> must be an IP or an hostname, 
 	 * without http:// or any trailing slash.
