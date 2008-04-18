@@ -50,10 +50,7 @@ class CircularBuffer {
 	 */
 	public CircularBuffer(int size) {
 		this.size = size;
-		this.firstIdx = 0;
-		this.lastIdx = 0;
-		this.empty = true;
-		this.buffer = new ByteArrayInputStream[size];
+		this.clear();
 	}
 	
 	/**
@@ -122,6 +119,16 @@ class CircularBuffer {
 	 */
 	public synchronized boolean isEmpty() {
 		return this.empty;
+	}
+	
+	/**
+	 * Clears the contents of the buffer.
+	 */
+	public void clear () {
+		this.firstIdx = 0;
+		this.lastIdx = 0;
+		this.empty = true;
+		this.buffer = new ByteArrayInputStream[size];
 	}
 
 	/**

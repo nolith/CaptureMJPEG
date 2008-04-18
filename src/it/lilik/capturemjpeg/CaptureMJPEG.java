@@ -295,9 +295,12 @@ public class CaptureMJPEG extends Thread {
 							boundary.charAt(1) != '-')
 						boundary = "--" + boundary;
 					
-					this.isChangePending = false;
-					if(this.adaptFrameSize)
-						this.changeFrameSize = true;
+					synchronized (lastImage) {
+						this.buffer.clear();
+						this.isChangePending = false;
+						if(this.adaptFrameSize)
+							this.changeFrameSize = true;
+					}
 				}	//end synchronized			
 			} //end if(isChangePending)
 
@@ -403,15 +406,15 @@ public class CaptureMJPEG extends Thread {
 	 * @return a reference to <code>lastImage</code>
 	 */
 	private PImage assign(PImage tmp) {
+		if(this.changeFrameSize) {
+			this.changeFrameSize = false;
+			this.parent.frame.setSize(tmp.width,
+					tmp.height);
+		}
 		if( lastImage.height != tmp.height || lastImage.width != tmp.width)
 			lastImage.init(tmp.width, tmp.height, PImage.RGB);
 		lastImage.copy(tmp, 0, 0, tmp.width, tmp.height,
 				0, 0, lastImage.width, lastImage.height);
-		if(this.changeFrameSize) {
-			this.changeFrameSize = false;
-			this.parent.frame.setSize(lastImage.width,
-					lastImage.height);
-		}
 		return lastImage;
 	}
 
