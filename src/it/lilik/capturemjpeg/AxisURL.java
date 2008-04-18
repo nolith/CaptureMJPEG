@@ -114,8 +114,10 @@ public class AxisURL {
 	 * @return a reference to <code>this</code>
 	 */
 
-	public void setDesiredFPS(int desiredFPS) {
+	public AxisURL setDesiredFPS(int desiredFPS) {
 		this.desiredFPS = new Integer (desiredFPS);
+		
+		return this;
 	}
 
 	/**
@@ -124,8 +126,10 @@ public class AxisURL {
 	 * @param requiredFPS the framerate
 	 * @return a reference to <code>this</code>
 	 */
-	public void setRequiredFPS(int requiredFPS) {
+	public AxisURL setRequiredFPS(int requiredFPS) {
 		this.requiredFPS = new Integer(requiredFPS);
+		
+		return this;
 	}
 	
 	/**
@@ -135,8 +139,10 @@ public class AxisURL {
 	 * @param height desired height of the image
 	 * @return a reference to <code>this</code>
 	 */
-	public void setResolution(int width, int height) {
+	public AxisURL setResolution(int width, int height) {
 		this.resolution = new Dimension (width, height);
+		
+		return this;
 	}
 	
 	/**
@@ -145,8 +151,10 @@ public class AxisURL {
 	 * @param camera the number of the camera to be shown.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setCamera(int camera) {
+	public AxisURL setCamera(int camera) {
 		this.camera = new Integer(camera);
+		
+		return this;
 	}
 	
 	/**
@@ -158,12 +166,14 @@ public class AxisURL {
 	 * @param colorLevel the desired color level
 	 * @return a reference to <code>this</code>
 	 */
-	public void setColorLevel(int colorLevel) {
+	public AxisURL setColorLevel(int colorLevel) {
 		if (colorLevel < 0)
 			colorLevel = 0;
 		if (colorLevel > 100)
 			colorLevel = 100;
 		this.colorLevel = new Integer(colorLevel);
+		
+		return this;
 	}
 	
 	/**
@@ -172,8 +182,10 @@ public class AxisURL {
 	 * @param showClock whether to show the timestamp.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setShowClock(boolean showClock) {
+	public AxisURL setShowClock(boolean showClock) {
 		this.showClock = new Boolean(showClock);
+		
+		return this;
 	}
 
 	/**
@@ -182,8 +194,10 @@ public class AxisURL {
 	 * @param showDate whether to show the date.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setShowDate(boolean showDate) {
+	public AxisURL setShowDate(boolean showDate) {
 		this.showDate = new Boolean (showDate);
+		
+		return this;
 	}
 	
 	/**
@@ -192,8 +206,10 @@ public class AxisURL {
 	 * @param quad whether to show a quad image.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setQuad(boolean quad) {
+	public AxisURL setQuad(boolean quad) {
 		this.quad = new Boolean (quad);
+		
+		return this;
 	}
 
 	/**
@@ -202,8 +218,10 @@ public class AxisURL {
 	 * @param showText whether to show the text.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setShowText(boolean showText) {
+	public AxisURL setShowText(boolean showText) {
 		this.showText = new Boolean (showText);
+		
+		return this;
 	}
 
 	/**
@@ -214,7 +232,7 @@ public class AxisURL {
 	 * @param rotation angle of rotation to be applied.
 	 * @return a reference to <code>this</code>
 	 */
-	public void setRotation(int rotation) {
+	public AxisURL setRotation(int rotation) {
 		if (rotation < 45)
 			rotation = 0;
 		else if (rotation < 135)
@@ -224,6 +242,8 @@ public class AxisURL {
 		else
 			rotation = 270;
 		this.rotation = new Integer(rotation);
+		
+		return this;
 	}
 	
 }
