@@ -1,0 +1,97 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{latexsym}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfsync}
+\usepackage{moreverb}
+\author{Alessio Caiazza, Cosimo Cecchi}
+\title{CaptureMJPEG: a MotionJPEG library for Procesing}
+\frenchspacing
+\begin{document}
+\maketitle
+\tableofcontents
+
+%\begin{abstract}
+%  Cosa faremo noi qui?
+%\end{abstract}
+\section{Introduzione}
+\label{sec:introduzione}
+Scopo del progetto, forse va bene anche come abstract.
+
+\section{Analisi}
+\label{sec:analisi}
+Analisi svolte sulle performance
+
+\section{Manuale}
+\label{sec:manuale}
+Guida all'installazione ed utilizzo di CaptureMJPEG
+\subsection{Installazione}
+\label{sec:installazione}
+
+\subsection{Guida}
+\label{sec:guida}
+
+
+
+\section{Sviluppo}
+\label{sec:sviluppo}
+Come continuare lo sviluppo
+\subsection{Ottenere i sorgenti}
+\label{sec:sorgenti}
+Prima di scaricare i sorgenti è necessario installare
+Mercurial\footnote{Mercurial può essere scaricato dal sito
+ http://www.selenic.com/mercurial/}, 
+per la gestione dei sorgenti ed Ant\footnote{Ant può essere scaricato
+dal sito http://ant.apache.org}, 
+per la gestione della compilazione.
+
+Per ottenere i sorgenti eseguire la clonazione del repository
+mercurial disponibile all'indirizzo
+\texttt{http://dev.abisso.org/capturemjpeg} 
+dopodiché creare una copia del file \texttt{user\_pref.xml.template}
+con nome \texttt{user\_pref.xml}.
+
+Il file contiene la configurazione di ant per il progetto, tutti i
+valori di default vanno bene ad eccezione della ``property''
+\texttt{processing-core} che deve essere corretta con la path completa
+al file \texttt{core.jar} incluso nella propria installazione di Processing.
+\begin{verbatim}
+<property name="processing-core" 
+    value="C:\Programmi\processing-0135-expert\lib\core.jar" />
+\end{verbatim}
+
+A questo punto è necessario eseguire il dowload delle librerie incluse
+in CaptureMJPEG eseguendo il comando:
+\begin{verbatim}
+   ant download_deps
+\end{verbatim}
+
+Quindi è possibile generare l'intera cartella di installazione con
+il comando:
+\begin{verbatim}
+   ant deploy 
+\end{verbatim}
+\begin{figure}
+  \centering
+\begin{boxedverbatim}
+
+ hg clone http://dev.abisso.org/capturemjpeg capturemjpeg   
+ cd capturemjpeg
+ cp user_pref.xml.template user_pref.xml
+
+\end{boxedverbatim}  
+  \caption{Come ottenere i sorgenti da terminale}
+  \label{fig:clone}
+\end{figure}
+
+\subsection{Classi utilizzate}
+\label{sec:classi}
+Forniamo ora una descrizione sommaria delle classi sviluppate per la
+libreria, per una trattazione più approfondita si rimanda alla
+documentazione JavaDoc disponibile online all'indirizzo 
+http://capturemjpeg.lilik.it/doc/
+
+
+
+
+\end{document}
