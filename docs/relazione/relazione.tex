@@ -1,36 +1,70 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage{latexsym}
 \usepackage[italian]{babel}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}  
 \usepackage{pdfsync}
 \usepackage{moreverb}
+\usepackage{listings}
 \author{Alessio Caiazza, Cosimo Cecchi}
 \title{CaptureMJPEG: a MotionJPEG library for Procesing}
 \frenchspacing
 \begin{document}
 \maketitle
+
+\newcommand{\reffigura}[1]{
+  Figura \ref{#1}
+}
+
+\begin{abstract}
+CaptureMJPEG è una libreria per
+Processing\footnote{http://processing.org} che consente di gestire uno
+stream motion-jpeg come input video.\\
+La libreria è in grado di acquisire lo stream tramite i protocolli
+\mbox{HTTP/HTTPS} e dispone di alcune classi di aiuto per la generazione di
+URL per le videocamere di rete AXIS e Sony.  
+\end{abstract}
 \tableofcontents
 
-%\begin{abstract}
-%  Cosa faremo noi qui?
-%\end{abstract}
+
 \section{Introduzione}
 \label{sec:introduzione}
-Scopo del progetto, forse va bene anche come abstract.
-
+%Cosa è stato fatto, come e con quali obiettivi
+%Presentazione del progetto e del sito
 \section{Analisi}
 \label{sec:analisi}
-Analisi svolte sulle performance
+%Studio della libreria eseguito con il codice di prova
+L'analisi è stata svolta applicando un filtro \texttt{blur} allo
+stream ottenuto con CaptureMJPEG e con la videocamera locale
+utilizzando la libreria Capture\footnote{la libreria Capture è fornita
+  in bundle con Processing.}.\\
+I sorgenti utilizzati sono quelli in \reffigura{fig:micc_blur} per
+CaptureMJPEG e in \reffigura{fig:capture_blur} per Capture.
+Sono stati misurati l'utilizzo di memoria e di CPU al variare delle
+dimensioni del filmato e del framerate richiesto allo sketch.
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/micc_blur.pde}  
+  \caption{Sorgente di test CaptureMJPEG}
+  \label{fig:micc_blur}
+\end{figure}
+\begin{figure}
+  \centering
+  \lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/capture_blur.pde}
+  \caption{Sorgente di test Capture}
+  \label{fig:capture_blur}
+\end{figure} 
+
+%qui andrebbero messi i risultati
 
 \section{Manuale}
 \label{sec:manuale}
 Guida all'installazione ed utilizzo di CaptureMJPEG
 \subsection{Installazione}
 \label{sec:installazione}
-
-\subsection{Guida}
+%scopiazzare dal sito e tradurre in italiano
+\subsection{Guida all'utilizzo}
 \label{sec:guida}
-
+%inserire un po' di esempi e spiegare le funzioni utilizzabili
 
 
 \section{Sviluppo}
@@ -90,6 +124,8 @@ Forniamo ora una descrizione sommaria delle classi sviluppate per la
 libreria, per una trattazione più approfondita si rimanda alla
 documentazione JavaDoc disponibile online all'indirizzo 
 http://capturemjpeg.lilik.it/doc/
+
+%inserire il diagramma delle classi UML e aggiungere qualche commento
 
 
 
