@@ -5,6 +5,7 @@
 \usepackage{pdfsync}
 \usepackage{moreverb}
 \usepackage{listings}
+\usepackage{graphicx}
 \author{Alessio Caiazza, Cosimo Cecchi}
 \title{CaptureMJPEG: a MotionJPEG library for Procesing}
 \frenchspacing
@@ -30,8 +31,35 @@ URL per le videocamere di rete AXIS e Sony.
 \label{sec:introduzione}
 %Cosa è stato fatto, come e con quali obiettivi
 %Presentazione del progetto e del sito
+
+
+\section{Manuale}
+\label{sec:manuale}
+Guida all'installazione ed utilizzo di CaptureMJPEG
+\subsection{Installazione}
+\label{sec:installazione}
+%scopiazzare dal sito e tradurre in italiano
+Per prima cosa scaricare l'ultima versione di CaptureMJPG dal sito
+ufficiale http://capturemjpeg.lilik.it .\\
+Una volta ottenuto l'archivio decomprimerlo all'interno della
+sottocartella \texttt{contributed} del proprio sketchbook, su Linux
+solitamente è \texttt{$\sim$/sketchbook}, su Mac OS X e Windows
+è la cartella \texttt{Processing} all'interno dei propri documenti.\\
+Qualora la sottocartella \texttt{contributed} non esistesse è
+necessario crearla.\\
+A questo punto riavviare Processing. 
+\subsection{Guida all'utilizzo}
+\label{sec:guida}
+%inserire un po' di esempi e spiegare le funzioni utilizzabili
+
+
+
 \section{Analisi}
 \label{sec:analisi}
+
+\subsection{Comparazione dell'algoritmo blur fra CaptureMJPEG e Capture}
+\label{sec:comparazione}
+
 %Studio della libreria eseguito con il codice di prova
 L'analisi è stata svolta applicando un filtro \texttt{blur} allo
 stream ottenuto con CaptureMJPEG e con la videocamera locale
@@ -40,7 +68,7 @@ utilizzando la libreria Capture\footnote{la libreria Capture è fornita
 I sorgenti utilizzati sono quelli in \reffigura{fig:micc_blur} per
 CaptureMJPEG e in \reffigura{fig:capture_blur} per Capture.
 Sono stati misurati l'utilizzo di memoria e di CPU al variare delle
-dimensioni del filmato e del framerate richiesto allo sketch.
+dimensioni del filmato e del framerate richiesto allo sketch.\\
 \begin{figure}
   \centering
 \lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/micc_blur.pde}  
@@ -53,19 +81,55 @@ dimensioni del filmato e del framerate richiesto allo sketch.
   \caption{Sorgente di test Capture}
   \label{fig:capture_blur}
 \end{figure} 
+L'analisi ha riportato un utilizzo di memoria minore per la libreria
+CaptureMJPEG, 30MB contro 40MB per il filmato a risoluzione 320x240 e
+50MB contro 60MB per il filmato a risoluzione 640x480.\\
 
-%qui andrebbero messi i risultati
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.9]{scilab/isto_blur_640.png}
+  \caption{Analisi algoritmo blur 640x480}
+  \label{fig:blur_640}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.9]{scilab/isto_blur_320.png}
+  \caption{Analisi algoritmo blur 320x240}
+  \label{fig:blur_320}
+\end{figure}
 
-\section{Manuale}
-\label{sec:manuale}
-Guida all'installazione ed utilizzo di CaptureMJPEG
-\subsection{Installazione}
-\label{sec:installazione}
-%scopiazzare dal sito e tradurre in italiano
-\subsection{Guida all'utilizzo}
-\label{sec:guida}
-%inserire un po' di esempi e spiegare le funzioni utilizzabili
+L'utilizzo di CPU è riportato in \reffigura{fig:blur_640} e in
+\reffigura{fig:blur_320}.
+L'algoritmo applicato allo stream di risoluzione 320x240 mostra un
+utilizzo di CPU più pesante da parte di CaptureMJPEG in media del
+11.7\% mentre con lo stream a risoluzione 640x480 l'utilizzo è più
+pesante da parte della libreria Capture, con un distacco fisso del
+5\%.\\
+Si deve considerare inoltre il fatto che CaptureMJPEG utilizza
+connessioni HTTP remote mentre Capture utilizza il bus USB ad alta
+velocità del sistema locale.\\
 
+I test sono stati eseguiti su un iMac con la seguente configurazione:
+\begin{tabbing}
+  \textbf{sistema operativo} \= Mac OS X 10.4.11 \kill
+
+  \textbf{processore} \>Intel Core Duo 2GHz (32 bit, dual core)\\
+  \textbf{memoria RAM} \> 1GB a 667MHz \\
+  \textbf{sistema operativo} \> Mac OS X 10.4.11 \\
+  \textbf{processing} \> 0135 beta \\
+\end{tabbing}
+
+\subsection{Impressioni qualitative}
+\label{sec:impressioni}
+
+%andrebbe scritto in italiano! :P
+Le modalità callback si presta bene per la realizzazione di sketch con
+funzionalità di monitoring, mentre se si richiede di processare i
+frame acquisiti si consiglia l'utilizzo della modalità senza callback
+se si preferisce diminuire il delay perdendo frame di immagine, se
+è più importante processare tutti i frame, anche acquisendo un
+notevole ritardo rispetto alla scena ripresa, allora utilizzare la
+modalità con callback.
 
 \section{Sviluppo}
 \label{sec:sviluppo}
