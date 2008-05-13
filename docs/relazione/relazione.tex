@@ -51,8 +51,50 @@ A questo punto riavviare Processing.
 \subsection{Guida all'utilizzo}
 \label{sec:guida}
 %inserire un po' di esempi e spiegare le funzioni utilizzabili
+La libreria si trova nel package \texttt{it.lilik.capturemjpeg}.\\
+La classe fondamentale \`e \texttt{CaptureMJPEG}, che dispone dei metodi
+necessari per la gestione dello stream e per l'integrazione con processing.
+Per una documentazione completa sulle classi offerte dal package e i relativi
+metodi disponibili si rimanda alla documentazione JavaDoc sul sito del 
+progetto.\footnote{http://capturemjpeg.lilik.it/doc/}\\
 
+Per ottenere un oggetto di tipo \texttt{CaptureMJPEG} \`e necessario invocare
+il suo costruttore con l'URI della videocamera come parametro. Per questa
+finalit\`a, la libreria mette a disposizione delle classi per creare facilmente
+gli URI a partire dalla marca della videocamera, correntemente sono
+implementate solo quelle per le videocamere Sony e AXIS.\\
+Una volta ottenuto l'oggetto \texttt{CaptureMJPEG} abbiamo a disposizione due
+modalit\`a per gestire lo stream proveniente dalla videocamera. La prima,
+chiamata modalit\`a di callback, prevede la definizione di un metodo
+all'interno dello sketch, che verr\`a invocato dalla libreria ogni volta che
+un nuovo fotogramma \`e pronto. La modalit\`a senza callback, invece, prevede
+che i fotogrammi siano salvati, non appena disponibili, in un buffer circolare
+interno alla libreria e accessibile tramite il metodo \texttt{getImage ()}.\\
+Un programmatore che usa la libreria ha la garanzia che il flusso restituito
+sar\`a sempre costituito da immagini. Infatti gli eventuali errori sono gestiti
+internamente alla libreria, che provveder\`a a creare delle immagini con una
+descrizione testuale dell'errore in caso di problemi.
+\subsubsection{Esempi}
+\label{sec:utilizzo_esempi}
+Qui di seguito sono illustrati vari esempi di utilizzo della libreria.\\
 
+L'esempio in \reffigura{fig:basic_usage} illustra l'utilizzo di base di CaptureMJPEG.
+Si nota la funzione di callback \texttt{captureMJPEGEvent}, invocata dalla libreria quando
+sono disonibili nuovi frame. In questo esempio \`e utilizzato il parser di
+default per gli URI. Si noti che in questo caso \`e necessario specificare
+l'URI completo di protocollo.\\
+
+Il secondo esempio in \reffigura{fig:vendor_specific} illustra la modalit\`a
+d'uso dei costruttori di URI specializzati. In questo caso \`e necessario
+inserire solamente l'host come parametro del costruttore dell'URI.\\
+
+Il terzo esempio in \reffigura{fig:buffer_usage} illustra l'utilizzo del buffer
+interno alla libreria. Si noti l'utilizzo del metodo \texttt{getImage ()} per
+ottenere il fotogramma successivo dello stream.\\
+
+Infine, l'esempio in \reffigura{fig:adaptive_fsize} mostra come sia possibile
+far s\`i che la dimensione dell'applet si adatti alla dimensione dello stream,
+attraverso la chiamata al metodo \texttt{setAdaptiveFrameSize ()}.\\
 
 \section{Analisi}
 \label{sec:analisi}
@@ -69,34 +111,9 @@ I sorgenti utilizzati sono quelli in \reffigura{fig:micc_blur} per
 CaptureMJPEG e in \reffigura{fig:capture_blur} per Capture.
 Sono stati misurati l'utilizzo di memoria e di CPU al variare delle
 dimensioni del filmato e del framerate richiesto allo sketch.\\
-\begin{figure}
-  \centering
-\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/micc_blur.pde}  
-  \caption{Sorgente di test CaptureMJPEG}
-  \label{fig:micc_blur}
-\end{figure}
-\begin{figure}
-  \centering
-  \lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/capture_blur.pde}
-  \caption{Sorgente di test Capture}
-  \label{fig:capture_blur}
-\end{figure} 
 L'analisi ha riportato un utilizzo di memoria minore per la libreria
 CaptureMJPEG, 30MB contro 40MB per il filmato a risoluzione 320x240 e
 50MB contro 60MB per il filmato a risoluzione 640x480.\\
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.9]{scilab/isto_blur_640.png}
-  \caption{Analisi algoritmo blur 640x480}
-  \label{fig:blur_640}
-\end{figure}
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.9]{scilab/isto_blur_320.png}
-  \caption{Analisi algoritmo blur 320x240}
-  \label{fig:blur_320}
-\end{figure}
 
 L'utilizzo di CPU è riportato in \reffigura{fig:blur_640} e in
 \reffigura{fig:blur_320}.
@@ -118,6 +135,7 @@ I test sono stati eseguiti su un iMac con la seguente configurazione:
   \textbf{sistema operativo} \> Mac OS X 10.4.11 \\
   \textbf{processing} \> 0135 beta \\
 \end{tabbing}
+
 
 \subsection{Impressioni qualitative}
 \label{sec:impressioni}
@@ -177,9 +195,10 @@ il comando:
  cd capturemjpeg
  cp user_pref.xml.template user_pref.xml
 
-\end{boxedverbatim}  
-  \caption{Come ottenere i sorgenti da terminale}
-  \label{fig:clone}
+\end{boxedverbatim}
+\\
+\vspace{0.3cm}
+Esempio: ottenere i sorgenti da terminale
 \end{figure}
 
 \subsection{Classi utilizzate}
@@ -187,11 +206,72 @@ il comando:
 Forniamo ora una descrizione sommaria delle classi sviluppate per la
 libreria, per una trattazione più approfondita si rimanda alla
 documentazione JavaDoc disponibile online all'indirizzo 
-http://capturemjpeg.lilik.it/doc/
+http://capturemjpeg.lilik.it/doc/.
+In \reffigura{fig:class_diagram1} e in \reffigura{fig:class_diagram2}
+si pu\`o visualizzare il diagramma delle classi della libreria.
 
-%inserire il diagramma delle classi UML e aggiungere qualche commento
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/basic_usage.pde}
+  \caption{Esempio di utilizzo base}
+  \label{fig:basic_usage}
+\end{figure}
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/vendor_specific.pde}
+  \caption{Utilizzo dei costruttori specializzati}
+  \label{fig:vendor_specific}
+\end{figure}
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/buffer_usage.pde}
+  \caption{Esempio dell'utilizzo del buffer}
+  \label{fig:buffer_usage}
+\end{figure}
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/adaptive_fsize.pde}
+  \caption{Utilizzo della dimensione adattiva}
+  \label{fig:adaptive_fsize}
+\end{figure}
+\begin{figure}
+  \centering
+\lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/micc_blur.pde}  
+  \caption{Sorgente di test CaptureMJPEG}
+  \label{fig:micc_blur}
+\end{figure}
+\begin{figure}
+  \centering
+  \lstinputlisting[language=Java,numbers=left,frame=shadowbox]{sources/capture_blur.pde}
+  \caption{Sorgente di test Capture}
+  \label{fig:capture_blur}
+\end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.9]{scilab/isto_blur_640.png}
+  \caption{Analisi algoritmo blur 640x480}
+  \label{fig:blur_640}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.9]{scilab/isto_blur_320.png}
+  \caption{Analisi algoritmo blur 320x240}
+  \label{fig:blur_320}
+\end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.7,angle=90]{img/capturemjpegclass.png}
+  \caption{Diagramma delle classi di CaptureMJPEG}
+  \label{fig:class_diagram1}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.9]{img/uribuilders.png}
+  \caption{Diagramma delle classi dei costruttori di URI}
+  \label{fig:class_diagram2}
+\end{figure}
 
 
 \end{document}
