@@ -31,7 +31,37 @@ URL per le videocamere di rete AXIS e Sony.
 \label{sec:introduzione}
 %Cosa è stato fatto, come e con quali obiettivi
 %Presentazione del progetto e del sito
-
+All'inizio dello sviluppo di CaptureMJPEG ci siamo chiesti quali
+fossero le linee guida da seguire. Ci siamo trovati d'accordo sul
+fatto che la libreria fosse rivolta ad una base di utenza non
+avanzata, composta da grafici o programmatori alle prime armi. Abbiamo
+optato quindi per una soluzione che privilegiasse la facilit\`a d'uso
+rispetto alla complessit\`a e alla ricchezza dell'API offerta,
+rimanendo in linea con la filosofia di Processing.\\
+Un esempio di questa scelta si pu\`o rintracciare nella gestione delle
+eccezioni, trasparente all'utente grazie alla rappresentazione di esse
+tramite immagini, quindi usabili senza alcun codice aggiuntivo di
+correzione dell'errore.\\
+Per facilitare l'apprendimento, una particolare attenzione \`e stata
+posta nel rispettare le convenzioni delle librerie del core di
+Processing, prendendo esempio dal comportamento della classe
+\texttt{Capture}.\\
+Per lo sviluppo, ci siamo avvalsi di strumenti open-source per la
+gestione del versionamento e per la creazione di un sito del progetto
+che fosse allo stesso tempo facile da consultare per gli utenti ma
+anche ricco di funzionalit\`a rivolte agli sviluppatori. Da questa
+esigenza \`e nata la scelta di Trac come motore per il sito del
+progetto. Il VCS che abbiamo scelto per lo sviluppo \`e Mercurial, per
+la facilit\`a di integrazione con Trac e per la possibilit\`a di
+effettuare commit e visionare il log del progetto anche offline. Il
+codice \`e stato sviluppato con Eclipse, grazie al quale abbiamo avuto
+la possibilit\`a di sperimentare una programmazione task-oriented,
+grazie all'utilizzo integrato di Mylyn.\\
+Si \`e scelto infine di utilizzare la tecnica del peer-programming per
+lo sviluppo, che consiste nello scambiarsi nel ruolo di scrittura e
+revisione del codice, minimizzando gli errori dovuti a stanchezza e
+distrazione e il tempo necessario alla revisione del codice e
+all'apprendimento di gruppo.
 
 \section{Manuale}
 \label{sec:manuale}
