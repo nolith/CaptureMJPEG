@@ -139,15 +139,15 @@ I test sono stati eseguiti su un iMac con la seguente configurazione:
 
 \subsection{Impressioni qualitative}
 \label{sec:impressioni}
-
-%andrebbe scritto in italiano! :P
-Le modalità callback si presta bene per la realizzazione di sketch con
-funzionalità di monitoring, mentre se si richiede di processare i
-frame acquisiti si consiglia l'utilizzo della modalità senza callback
-se si preferisce diminuire il delay perdendo frame di immagine, se
-è più importante processare tutti i frame, anche acquisendo un
-notevole ritardo rispetto alla scena ripresa, allora utilizzare la
-modalità con callback.
+Dall'osservazione del comportamento della libreria nei test effettuati,
+si evince che la modalit\`a di callback ha un comportamento ottimale per la
+realizzazione di sketch con fine di monitoraggio o di visione delle immagini,
+dato che tutti i frame provenienti dalla videocamera sono resi disponibili
+al programmatore. Se invece si vuole applicare trasformazioni alle immagini,
+mantenendo la sincronia con il flusso proveniente dalla videocamera, allora
+si consiglia l'uso della modalit\`a senza callback, dato che gli eventuali
+frame non estratti dal buffer, perch\'e impegnati in operazioni di processing,
+sono automaticamente scartati dal sistema.
 
 \section{Sviluppo}
 \label{sec:sviluppo}
@@ -208,7 +208,33 @@ libreria, per una trattazione più approfondita si rimanda alla
 documentazione JavaDoc disponibile online all'indirizzo 
 http://capturemjpeg.lilik.it/doc/.
 In \reffigura{fig:class_diagram1} e in \reffigura{fig:class_diagram2}
-si pu\`o visualizzare il diagramma delle classi della libreria.
+si pu\`o visualizzare il diagramma delle classi della libreria.\\
+Il metodo con cui vengono acquisite le immagini dalla videocamera \`e basato
+sull'identificazione all'interno dello stream HTTP proveniente da essa,
+dell'elemento che separa le singole immagini, ovvero il \texttt{boundary}.
+La prima operazione eseguita all'inizializzazione della libreria \`e dunque 
+l'instaurazione di una connessione HTTP al server specificato, tramite le
+classi \texttt{HTTPClient} di Apache. Una volta ottenuta la connessione,
+l'operazione seguente \`e l'identificazione del boundary, che pu\`o variare
+a seconda della marca e del modello della videocamera a cui siamo connessi.
+Il boundary \`e comunque specificato nell'header della risposta HTTP della
+videocamera, all'interno del campo \texttt{Content-Type}. Questo compito
+\`e svolto dalla classe \texttt{CaptureMJPEG}, che implementa quanto illustrato
+tramite un thread.\\
+Una volta ottenuto il boundary, le immagini sono estratte dallo stream tramite
+un meccanismo basato sulla rilevazione dell'identificativo di mime-type
+proprio delle immagini JPEG. A tal proposito, abbiamo ritenuto
+oppurtuno implementare una classe, \texttt{MJPEGInputStream}, che ereditasse
+dalla classe \texttt{java.io.FilteredInputStream} e che ha il suo metodo
+fondamentale in \texttt{byte[] readImage ()}, che restituisce un array
+contenente l'immagine in formato JPEG.\\
+Dopo l'acquisizione di un'immagine, il codice valuta se sia presente o meno
+il meccanismo di callback e in caso negativo, l'immagine ottenuta viene salvata
+in un buffer circolare, implementato in \texttt{CircularBuffer}.\\
+La classe \texttt{ErrorImage} si occupa di generare immagini rappresentanti
+un'eventuale errore nel processo, mentre le classi \texttt{AxisURL} e 
+\texttt{SonyURL} hanno il compito di costruire un URL a partire dai parametri
+specifici supportati dalle videocamere della relativa marca.
 
 \begin{figure}
   \centering
