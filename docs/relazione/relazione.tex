@@ -18,11 +18,11 @@
 
 \begin{abstract}
 CaptureMJPEG è una libreria per
-Processing\footnote{http://processing.org} che consente di gestire uno
+Processing\footnote{http://processing.org} che consente di gestire gli
 stream motion-jpeg come input video.\\
-La libreria è in grado di acquisire lo stream tramite i protocolli
-\mbox{HTTP/HTTPS} e dispone di alcune classi di aiuto per la generazione di
-URL per le videocamere di rete AXIS e Sony.  
+La libreria è in grado di acquisire stream tramite i protocolli
+\mbox{HTTP/HTTPS} e dispone di alcune classi di aiuto per la 
+generazione di URL per le videocamere di rete AXIS e Sony.  
 \end{abstract}
 \tableofcontents
 
@@ -40,7 +40,7 @@ rispetto alla complessit\`a e alla ricchezza dell'API offerta,
 rimanendo in linea con la filosofia di Processing.\\
 Un esempio di questa scelta si pu\`o rintracciare nella gestione delle
 eccezioni, trasparente all'utente grazie alla rappresentazione di esse
-tramite immagini, quindi usabili senza alcun codice aggiuntivo di
+tramite immagini, quindi utilizzabili senza alcun codice aggiuntivo di
 correzione dell'errore.\\
 Per facilitare l'apprendimento, una particolare attenzione \`e stata
 posta nel rispettare le convenzioni delle librerie del core di
@@ -109,7 +109,7 @@ descrizione testuale dell'errore in caso di problemi.
 Qui di seguito sono illustrati vari esempi di utilizzo della libreria.\\
 
 L'esempio in \reffigura{fig:basic_usage} illustra l'utilizzo di base di CaptureMJPEG.
-Si nota la funzione di callback \texttt{captureMJPEGEvent}, invocata dalla libreria quando
+Si noti la funzione di callback \texttt{captureMJPEGEvent}, invocata dalla libreria quando
 sono disonibili nuovi frame. In questo esempio \`e utilizzato il parser di
 default per gli URI. Si noti che in questo caso \`e necessario specificare
 l'URI completo di protocollo.\\
@@ -175,18 +175,18 @@ dato che tutti i frame provenienti dalla videocamera sono resi disponibili
 al programmatore. Se invece si vuole applicare trasformazioni alle immagini,
 mantenendo la sincronia con il flusso proveniente dalla videocamera, allora
 si consiglia l'uso della modalit\`a senza callback, dato che gli eventuali
-frame non estratti dal buffer, perch\'e impegnati in operazioni di processing,
-sono automaticamente scartati dal sistema.
+frame non estratti dal buffer durante le operazioni di processing,
+sono automaticamente scartati dal sistema superata la soglia del
+buffer interno.
 
 \section{Sviluppo}
 \label{sec:sviluppo}
-Come continuare lo sviluppo
 \subsection{Ottenere i sorgenti}
 \label{sec:sorgenti}
 Prima di scaricare i sorgenti è necessario installare
 Mercurial\footnote{Mercurial può essere scaricato dal sito
  http://www.selenic.com/mercurial/}, 
-per la gestione dei sorgenti ed Ant\footnote{Ant può essere scaricato
+per la gestione delle versioni ed Ant\footnote{Ant può essere scaricato
 dal sito http://ant.apache.org}, 
 per la gestione della compilazione.
 
@@ -239,8 +239,8 @@ http://capturemjpeg.lilik.it/doc/.
 In \reffigura{fig:class_diagram1} e in \reffigura{fig:class_diagram2}
 si pu\`o visualizzare il diagramma delle classi della libreria.\\
 Il metodo con cui vengono acquisite le immagini dalla videocamera \`e basato
-sull'identificazione all'interno dello stream HTTP proveniente da essa,
-dell'elemento che separa le singole immagini, ovvero il \texttt{boundary}.
+sull'identificazione all'interno dello stream HTTP dell'elemento che 
+separa le singole immagini, ovvero il \texttt{boundary}.
 La prima operazione eseguita all'inizializzazione della libreria \`e dunque 
 l'instaurazione di una connessione HTTP al server specificato, tramite le
 classi \texttt{HTTPClient} di Apache. Una volta ottenuta la connessione,
@@ -258,8 +258,9 @@ dalla classe \texttt{java.io.FilteredInputStream} e che ha il suo metodo
 fondamentale in \texttt{byte[] readImage ()}, che restituisce un array
 contenente l'immagine in formato JPEG.\\
 Dopo l'acquisizione di un'immagine, il codice valuta se sia presente o meno
-il meccanismo di callback e in caso negativo, l'immagine ottenuta viene salvata
-in un buffer circolare, implementato in \texttt{CircularBuffer}.\\
+una funzione di callback da invocare e in caso negativo, l'immagine
+ottenuta viene salvata in un buffer circolare, implementato in 
+\texttt{CircularBuffer}.\\
 La classe \texttt{ErrorImage} si occupa di generare immagini rappresentanti
 un'eventuale errore nel processo, mentre le classi \texttt{AxisURL} e 
 \texttt{SonyURL} hanno il compito di costruire un URL a partire dai parametri
