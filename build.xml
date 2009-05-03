@@ -127,8 +127,6 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	<mkdir dir="${release}"/>
 	<mkdir dir="${release}/capturemjpeg"/>
 	<mkdir dir="${release}/capturemjpeg/library"/>
-	<mkdir dir="${release}/capturemjpeg/licenses"/>
-	<mkdir dir="${release}/capturemjpeg/documentation"/>
   </target>
 
   <target name="deploy" depends="jar, doc">
@@ -141,8 +139,16 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  <fileset dir="./licenses"/>
 	</copy>
 	<!-- copy documentation -->
-	<copy todir="${release}/capturemjpeg/documentation">
+	<copy todir="${release}/capturemjpeg/reference">
 	  <fileset dir="${docs}/api"/>
+	</copy>
+	<!-- copy examples -->
+	<copy todir="${release}/capturemjpeg/examples">
+	  <fileset dir="${docs}/examples"/>
+	</copy>
+	<!-- copy source -->
+	<copy todir="${release}/capturemjpeg/src">
+	  <fileset dir="${src}"/>
 	</copy>
 	<!-- create zip file -->
 	<zip destfile="${release}/capturemjpeg.zip"
