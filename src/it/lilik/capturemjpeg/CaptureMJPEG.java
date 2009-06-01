@@ -14,11 +14,12 @@
     You should have received a copy of the GNU Lesser Public License
     along with CaptureMJPEG.  If not, see <http://www.gnu.org/licenses/>.
     
-    Copyright (c) 2008 - Alessio Caiazza, Cosimo Cecchi
+    Copyright (c) 2008-09 - Alessio Caiazza, Cosimo Cecchi
  */
 package it.lilik.capturemjpeg;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -313,9 +314,7 @@ public class CaptureMJPEG extends Thread {
 				synchronized (lastImage) {
 					if (captureEventMethod != null) {
 				            try {
-				            	PImage tmp = null;
-				            	tmp = new PImage((BufferedImage)ImageIO.read(
-						            			new ByteArrayInputStream(img)));
+											PImage tmp = getPImage(new ByteArrayInputStream(img));
 				            	captureEventMethod.invoke(parent, new Object[] { 
 				            		  this.assign(tmp) });
 				            } catch (Exception e) {
@@ -343,6 +342,34 @@ public class CaptureMJPEG extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+
+	/*
+	 * Bypass Default PImage costructur forcing
+	 * a load like in Processing < 1.0
+	 *
+	 */
+	private PImage getPImage(ByteArrayInputStream bais) throws IOException {
+		PImage tmp = null;
+		BufferedImage bi = (BufferedImage)ImageIO.read(bais);
+
+		int width = bi.getWidth(null);
+		int height = bi.getHeight(null);
+		int[] pixels = new int[width * height];
+		PixelGrabber pg =
+				new PixelGrabber(bi, 0, 0, width, height, pixels, 0, width);
+		try {
+				pg.grabPixels();
+		} catch (InterruptedException e) { }
+
+		tmp = new PImage(width,height);
+		tmp.loadPixels();
+		for (int i = 0; i < width * height; i++) {
+				tmp.pixels[i] = pixels[i];
+		}
+		tmp.updatePixels();
+
+		return tmp;	
 	}
 
 	private void setErrorImage(ErrorImage error) {
@@ -381,7 +408,7 @@ public class CaptureMJPEG extends Thread {
 			if (!isImageAvailable())
 				return lastImage;
 			try {
-				PImage tmp = new PImage(ImageIO.read(buffer.pop()));
+				PImage tmp = getPImage(buffer.pop());
 				return assign(tmp);
 			} catch (IOException e1) {
 				e1.printStackTrace();

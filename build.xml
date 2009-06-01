@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- build file for CaptureMJPEG library -->
-<!-- Created by: Alessio Caiazza &lt;ac@abisso.org&gt;	-->
+<!-- Created by: Alessio Caiazza &lt;nolith@abisso.org&gt;	-->
 
 <project name="CaptureMJPEG" default="build" basedir=".">
 	<import file="user_pref.xml"/>
@@ -172,7 +172,7 @@ src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.2.tar
 	  		<exclude name="it/lilik/capturemjpeg/*Test.java"/>  
 	  	</fileset>
 	    <doctitle><![CDATA[<h1>CaptureMJPEG</h1>]]></doctitle>
-	    <bottom><![CDATA[<i>Copyright &#169; 2008 Alessio Caiazza, Cosimo Cecchi All Rights Reserved.</i>]]></bottom>
+	    <bottom><![CDATA[<i>Copyright &#169; 2008-09 Alessio Caiazza, Cosimo Cecchi All Rights Reserved.</i>]]></bottom>
 	    <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
 	  	<link href="http://hc.apache.org/httpclient-3.x/apidocs/"/>
 		<link href="http://dev.processing.org/reference/core/javadoc/"/>
